@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
+import Symbol_Analysis as sa
 
 parameters['allow_extrapolation'] = True
 
@@ -144,6 +145,8 @@ file_lame        = File(os.path.join(outputfolder,
                                      'LameParameter',   'lamepar.pvd'))
 file_bound_start = File(os.path.join(outputfolder,
                                      'BoundaryData',   'bound_start.pvd'))
+file_bound_func = File(os.path.join(outputfolder,
+                                     'Gradient',   'func.pvd'))
 
 # Zusammenfassung aller Parameter als Ausgabe in der Konsole
 print("\n-----------------PARAMETER------------------------------\n")
@@ -264,6 +267,15 @@ if(L_BFGS):
     print("Iteration " + "  ||f_elas||_L2 " + "  J = j + j_reg " + "  ||U||_L2  " + " Curv. Cond. " + " Meshdistance")
 elif(L_BFGS == False):
     print("Iteration " + "  ||f_elas||_L2 " + "  J = j + j_reg " + "  ||U||_L2  " +  " Meshdistance")
+
+
+
+func = sa.input_signal(MeshData, 2., 3.)
+
+file_bound_func << func
+
+
+
 
 # Start der Optimierungsschritte
 while nrm_f_elas[1] > tol_shopt:
