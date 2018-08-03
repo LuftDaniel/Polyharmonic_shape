@@ -215,7 +215,7 @@ file_data_sol_y_2 << y_z[1]
 file_data_mesh << targetMeshData.mesh
 file_data_bound << targetMeshData.boundaries
 file_targ_bound << targetMeshData.boundaries
-file_bound_start << MeshData.boundaries, 0
+#file_bound_start << MeshData.boundaries, 0
 
 # ----------------------- #
 #   FORM OPTIMIERUNG      #
@@ -270,11 +270,25 @@ elif(L_BFGS == False):
 
 
 
-func = sa.input_signal(MeshData, 2., 3.)
+signal = sa.input_signal(MeshData, 3., 3., 0.2, 2.*np.pi*0.15, True)
+interface_indizes = sa.order_boundary_verts(MeshData)
+interface_facets = sa.order_boundary_facets(MeshData, interface_indizes)
+interface_normal = sa.get_vertex_normal(MeshData, interface_facets)
 
-file_bound_func << func
+print(len(interface_indizes))
+print(len(interface_facets))
+print(len(interface_normal))
+for i in range(len(interface_indizes)):
+    print(MeshData.mesh.coordinates()[interface_indizes[i]])
+    print interface_normal[2*i], interface_normal[2*i+1]
 
 
+
+#ALE.move(MeshData.mesh, signal)
+file_bound_start << MeshData.boundaries
+file_bound_func << signal
+
+exit()
 
 
 # Start der Optimierungsschritte
